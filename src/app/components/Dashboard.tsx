@@ -9,31 +9,36 @@ import DependencyPanel from "./views/DependencyPanel";
 import OnboardingGuide from "./views/OnboardingGuide";
 import AIChat from "./views/AIChat";
 import Settings from "./views/Settings";
-import { mockRepo } from "../data/mockData";
+import { RepoData } from "../services/api";
 
 interface DashboardProps {
   repoUrl: string;
+  repoData: RepoData | null;
   darkMode: boolean;
   toggleDarkMode: () => void;
   onBack: () => void;
 }
 
-const viewMeta: Record<DashboardView, { title: string; sub: string }> = {
-  overview:     { title: "overview",        sub: `${mockRepo.fullName} · health 87/100` },
-  architecture: { title: "architecture",    sub: "module dependency graph" },
-  files:        { title: "file explorer",   sub: "247 files · browse and understand" },
-  execution:    { title: "execution flow",  sub: "request lifecycle trace" },
-  dependencies: { title: "dependencies",    sub: "10 packages · 1 vulnerability" },
-  onboarding:   { title: "onboarding",      sub: "ai-generated setup guide" },
-  chat:         { title: "ask ai",          sub: "chat with your codebase" },
-  settings:     { title: "settings",        sub: "configure preferences and API keys" },
+const getMeta = (activeView: DashboardView, repoData: RepoData | null) => {
+  const mockRepo = repoData || { fullName: "unknown/unknown", score: 0, files: 0 };
+  const metas: Record<DashboardView, { title: string; sub: string }> = {
+    overview:     { title: "overview",        sub: `${mockRepo.fullName} · health ${mockRepo.score}/100` },
+    architecture: { title: "architecture",    sub: "module dependency graph" },
+    files:        { title: "file explorer",   sub: `${mockRepo.files} files · browse and understand` },
+    execution:    { title: "execution flow",  sub: "request lifecycle trace" },
+    dependencies: { title: "dependencies",    sub: "audit packages" },
+    onboarding:   { title: "onboarding",      sub: "ai-generated setup guide" },
+    chat:         { title: "ask ai",          sub: "chat with your codebase" },
+    settings:     { title: "settings",        sub: "configure preferences and API keys" },
+  };
+  return metas[activeView];
 };
 
-export default function Dashboard({ repoUrl, darkMode, toggleDarkMode, onBack }: DashboardProps) {
+export default function Dashboard({ repoUrl, repoData, darkMode, toggleDarkMode, onBack }: DashboardProps) {
   const [activeView, setActiveView] = useState<DashboardView>("overview");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const meta = viewMeta[activeView];
+  const meta = getMeta(activeView, repoData);
 
   return (
     <div
@@ -46,7 +51,7 @@ export default function Dashboard({ repoUrl, darkMode, toggleDarkMode, onBack }:
           <Terminal className="w-3.5 h-3.5" />
           <span>codelore</span>
           <span className="text-zinc-800">/</span>
-          <span className="text-zinc-500">{mockRepo.fullName}</span>
+          <span className="text-zinc-500">{repoData?.fullName || mockRepo.fullName}</span>
           <span className="text-zinc-800">/</span>
           <span className="text-zinc-400">{meta.title}</span>
         </div>
@@ -98,13 +103,13 @@ export default function Dashboard({ repoUrl, darkMode, toggleDarkMode, onBack }:
             </div>
           )}
 
-          {activeView === "overview"      && <Overview onNavigate={(v) => setActiveView(v as DashboardView)} />}
+          {activeView === "overview"      && <Overview repoData={repoData} onNavigate={(v) => setActiveView(v as DashboardView)} />}
           {activeView === "architecture"  && <ArchitectureView />}
-          {activeView === "files"         && <FileExplorer />}
+          {activeView === "files"         && <FileExplorer repoData={repoData} />}
           {activeView === "execution"     && <ExecutionFlow />}
           {activeView === "dependencies"  && <DependencyPanel />}
           {activeView === "onboarding"    && <OnboardingGuide />}
-          {activeView === "chat"          && <AIChat />}
+          {activeView === "chat"          && <AIChat repoData={repoData} />}
           {activeView === "settings"      && <Settings />}
         </main>
       </div>

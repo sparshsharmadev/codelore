@@ -1,39 +1,52 @@
-import { mockRepo, mockInsights } from "../../data/mockData";
+import { mockRepo as placeholderRepo, mockInsights } from "../../data/mockData";
+import { RepoData } from "../../services/api";
 
 interface OverviewProps {
+  repoData: RepoData | null;
   onNavigate: (view: string) => void;
 }
 
-const langBreakdown = [
-  { name: "TypeScript", percent: 72 },
-  { name: "CSS",        percent: 15 },
-  { name: "JavaScript", percent: 8  },
-  { name: "JSON",       percent: 5  },
-];
+const getMetrics = (repoData: RepoData | null) => {
+  if (!repoData) return [
+    { label: "files",         value: "0",    sub: "calculating..." },
+    { label: "lines of code", value: "0",    sub: "calculating..." },
+    { label: "github stars",  value: "0",    sub: "---" },
+    { label: "last commit",   value: "---",  sub: "---" },
+  ];
 
-const scoreCategories = [
-  { label: "Architecture",     score: 92 },
-  { label: "Code Quality",     score: 85 },
-  { label: "Security",         score: 78 },
-  { label: "Performance",      score: 90 },
-  { label: "Maintainability",  score: 83 },
-];
-
-const metrics = [
-  { label: "files",         value: "247",    sub: "across 34 dirs" },
-  { label: "lines of code", value: "18.4k",  sub: "excl. generated" },
-  { label: "github stars",  value: "12.8k",  sub: "trending" },
-  { label: "last commit",   value: "2d ago",  sub: "branch main" },
-];
-
-const severityPrefix: Record<string, string> = {
-  success: "[ok]  ",
-  warning: "[warn]",
-  error:   "[err] ",
-  info:    "[info]",
+  return [
+    { label: "files",         value: repoData.files.toString(),    sub: "across source" },
+    { label: "lines of code", value: (repoData.lines / 1000).toFixed(1) + "k",  sub: "total codebase" },
+    { label: "github stars",  value: "---",  sub: "fetched from api" },
+    { label: "last commit",   value: "---",  sub: `branch ${repoData.branch}` },
+  ];
 };
 
-export default function Overview({ onNavigate }: OverviewProps) {
+export default function Overview({ repoData, onNavigate }: OverviewProps) {
+  const repo = repoData || placeholderRepo;
+  const metrics = getMetrics(repoData);
+  
+  const langBreakdown = repoData ? Object.entries(repoData.languages).map(([name, count]) => ({
+    name,
+    percent: Math.round((count / repoData.lines) * 100)
+  })).sort((a, b) => b.percent - a.percent).slice(0, 4) : [
+    { name: "TypeScript", percent: 0 },
+  ];
+  const scoreCategories = [
+    { label: "Architecture",     score: repo.score },
+    { label: "Code Quality",     score: Math.max(0, repo.score - 5) },
+    { label: "Security",         score: Math.max(0, repo.score - 10) },
+    { label: "Performance",      score: Math.max(0, repo.score + 5) },
+    { label: "Maintainability",  score: Math.max(0, repo.score - 2) },
+  ];
+
+  const severityPrefix: Record<string, string> = {
+    success: "[ok]  ",
+    warning: "[warn]",
+    error:   "[err] ",
+    info:    "[info]",
+  };
+
   return (
     <div
       className="flex-1 overflow-y-auto"
@@ -45,22 +58,22 @@ export default function Overview({ onNavigate }: OverviewProps) {
         <div className="flex items-start justify-between">
           <div>
             <div className="text-xs text-zinc-600 mb-1">
-              <span className="text-zinc-500">$</span> codelore info github.com/{mockRepo.fullName}
+              <span className="text-zinc-500">$</span> codelore info github.com/{repo.fullName}
             </div>
             <div className="text-sm text-zinc-200 mb-2" style={{ fontWeight: 600 }}>
-              {mockRepo.owner}/<span className="text-zinc-100">{mockRepo.name}</span>
+              {repo.owner}/<span className="text-zinc-100">{repo.name}</span>
             </div>
             <p className="text-xs text-zinc-600 max-w-lg leading-relaxed mb-3">
-              {mockRepo.description}
+              {repo.description}
             </p>
             <div className="flex items-center gap-4 text-xs text-zinc-700">
-              <span>{mockRepo.primaryLanguage}</span>
+              <span>{repo.primaryLanguage}</span>
               <span>·</span>
-              <span>★ {(mockRepo.stars / 1000).toFixed(1)}k</span>
+              <span>★ {(repo.stars / 1000).toFixed(1)}k</span>
               <span>·</span>
-              <span>branch: {mockRepo.branch}</span>
+              <span>branch: {repo.branch}</span>
               <span>·</span>
-              <span className="text-zinc-500">analyzed {mockRepo.lastAnalyzed}</span>
+              <span className="text-zinc-500">analyzed {repo.lastAnalyzed}</span>
             </div>
           </div>
 

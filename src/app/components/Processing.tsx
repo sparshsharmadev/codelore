@@ -1,18 +1,17 @@
 import { useState, useEffect } from "react";
 import { Check, Terminal } from "lucide-react";
+import { analyzeRepo, RepoData } from "../services/api";
 
 interface ProcessingProps {
   repoUrl: string;
-  onComplete: () => void;
+  onComplete: (data: RepoData) => void;
 }
 
 const steps = [
   { id: "clone",   label: "cloning repository",          detail: "fetching source tree and git history",                     duration: 1200 },
-  { id: "parse",   label: "parsing 247 files",            detail: "building AST for TypeScript, CSS, and JSON",              duration: 1800 },
-  { id: "deps",    label: "resolving import graph",       detail: "mapping all module dependencies and cross-references",     duration: 1400 },
-  { id: "arch",    label: "mapping architecture",         detail: "identifying layers, modules, and boundaries",              duration: 1600 },
-  { id: "flow",    label: "tracing execution paths",      detail: "following request paths from entry to data layer",         duration: 1300 },
-  { id: "ai",      label: "generating AI insights",       detail: "synthesizing explanations, onboarding guide, and Q&A",    duration: 2200 },
+  { id: "parse",   label: "parsing files",               detail: "building AST and counting lines",                          duration: 1800 },
+  { id: "deps",    label: "resolving dependencies",      detail: "mapping package.json and imports",                         duration: 1400 },
+  { id: "ai",      label: "generating AI insights",       detail: "synthesizing explanations and Q&A",                       duration: 2200 },
 ];
 
 export default function Processing({ repoUrl, onComplete }: ProcessingProps) {
@@ -33,49 +32,31 @@ export default function Processing({ repoUrl, onComplete }: ProcessingProps) {
     const logs = [
       `$ git clone --depth=1 ${repoUrl}`,
       `cloning into '${repoName.split("/")[1]}'...`,
-      `remote: enumerating objects: 247, done.`,
-      `remote: counting objects: 100% (247/247), done.`,
     ];
-    let i = 0;
-    const t = setInterval(() => {
-      if (i < logs.length) { setLogLines((p) => [...p, logs[i]]); i++; }
-      else clearInterval(t);
-    }, 350);
-    return () => clearInterval(t);
-  }, [repoUrl, repoName]);
+    setLogLines(logs);
 
-  useEffect(() => {
-    let stepIdx = 0;
-    let progressVal = 0;
-
-    const runNextStep = () => {
-      if (stepIdx >= steps.length) {
+    const runAnalysis = async () => {
+      try {
+        // Step 1: Clone (Simulated progress for now until backend supports streaming)
+        setCurrentStep(0);
+        setGlobalProgress(20);
+        
+        const data = await analyzeRepo(repoUrl);
+        
+        // Step 2-4: Fast forward through remaining steps once data is back
+        setCompletedSteps(new Set([0, 1, 2]));
+        setCurrentStep(3);
         setGlobalProgress(100);
-        setTimeout(onComplete, 600);
-        return;
+        setLogLines(prev => [...prev, `remote: enumerating objects: ${data.files}, done.`, `analysis complete: ${data.lines} lines found.`]);
+        
+        setTimeout(() => onComplete(data), 1000);
+      } catch (err: any) {
+        setLogLines(prev => [...prev, `[error] ${err.message}`]);
       }
-      setCurrentStep(stepIdx);
-      const step = steps[stepIdx];
-      const progressPerStep = 100 / steps.length;
-      const endProgress = (stepIdx + 1) * progressPerStep;
-
-      const pi = setInterval(() => {
-        progressVal = Math.min(progressVal + 0.5, endProgress);
-        setGlobalProgress(progressVal);
-        if (progressVal >= endProgress) clearInterval(pi);
-      }, step.duration / (progressPerStep * 20));
-
-      setTimeout(() => {
-        clearInterval(pi);
-        setGlobalProgress(endProgress);
-        setCompletedSteps((prev) => new Set([...prev, stepIdx]));
-        stepIdx++;
-        setTimeout(runNextStep, 100);
-      }, step.duration);
     };
 
-    runNextStep();
-  }, [onComplete]);
+    runAnalysis();
+  }, [repoUrl, repoName]);
 
   return (
     <div

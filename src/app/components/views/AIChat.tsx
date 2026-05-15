@@ -76,14 +76,21 @@ function MessageContent({ content }: { content: string }) {
   );
 }
 
-export default function AIChat() {
+import { RepoData } from "../../services/api";
+
+interface AIChatProps {
+  repoData: RepoData | null;
+}
+
+export default function AIChat({ repoData }: AIChatProps) {
+  const repoName = repoData?.fullName || "this repository";
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "welcome",
       role: "assistant",
-      content: "ready. i've analyzed **vercel/next-commerce**. ask me anything about the architecture, how to add features, security, or what any specific part of the code does.",
+      content: `ready. i've analyzed **${repoName}**. ask me anything about the architecture, how to add features, security, or what any specific part of the code does.`,
       confidence: 95,
-      sources: ["README.md", "app/layout.tsx", "lib/shopify/index.ts"],
+      sources: ["README.md"],
     },
   ]);
   const [input, setInput] = useState("");
@@ -99,7 +106,7 @@ export default function AIChat() {
       if (i >= text.length) {
         clearInterval(iv);
         setIsStreaming(false);
-        setMessages((prev) => prev.map((m) => m.id === id ? { ...m, isStreaming: false, confidence: 88, sources: ["lib/shopify/index.ts", "app/product/[handle]/page.tsx", "components/cart/actions.ts"] } : m));
+        setMessages((prev) => prev.map((m) => m.id === id ? { ...m, isStreaming: false, confidence: 88, sources: [] } : m));
         return;
       }
       const chunk = text.slice(0, i + 10);
@@ -122,7 +129,7 @@ export default function AIChat() {
       q.toLowerCase().includes(p.question.toLowerCase().split(" ")[2])
     );
     const response = matched?.answer ||
-      `based on my analysis of **vercel/next-commerce**:\n\nthe codebase uses a clean layered pattern — pages in \`app/\`, shared components in \`components/\`, all api calls in \`lib/shopify/\`.\n\nfor your question about "${q}", i'd start in \`lib/shopify/index.ts\` — that's the primary data access layer.\n\nwant me to trace a specific execution path or explain a particular file?`;
+      `based on my analysis of **${repoName}**:\n\nit contains ${repoData?.files} files and ${repoData?.lines} lines of code. the primary language is ${repoData?.primaryLanguage}.\n\nfor your question about "${q}", i'd need a deeper AI integration to give a precise answer. currently, i can see the file structure but not the full content of every function.`;
     setTimeout(() => streamResponse(response, aiId), 300);
   };
 
@@ -138,7 +145,7 @@ export default function AIChat() {
           <Terminal className="w-3.5 h-3.5 text-zinc-700" />
           <span>ask ai</span>
           <span className="text-zinc-800">·</span>
-          <span className="text-zinc-700">codebase-aware · vercel/next-commerce</span>
+          <span className="text-zinc-700">codebase-aware · {repoName}</span>
         </div>
         <button
           onClick={() => setMessages([messages[0]])}

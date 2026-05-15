@@ -4,12 +4,14 @@ import Landing from "./components/Landing";
 import RepoImport from "./components/RepoImport";
 import Processing from "./components/Processing";
 import Dashboard from "./components/Dashboard";
+import { RepoData } from "./services/api";
 
 export type View = "landing" | "import" | "processing" | "dashboard";
 
 export default function App() {
   const [view, setView] = useState<View>("landing");
   const [repoUrl, setRepoUrl] = useState("https://github.com/vercel/next-commerce");
+  const [repoData, setRepoData] = useState<RepoData | null>(null);
   const [darkMode, setDarkMode] = useState(true);
 
   useEffect(() => {
@@ -76,7 +78,10 @@ export default function App() {
           >
             <Processing
               repoUrl={repoUrl}
-              onComplete={() => setView("dashboard")}
+              onComplete={(data) => {
+                setRepoData(data);
+                setView("dashboard");
+              }}
             />
           </motion.div>
         )}
@@ -91,6 +96,7 @@ export default function App() {
             className="size-full"
           >
             <Dashboard
+              repoData={repoData}
               repoUrl={repoUrl}
               darkMode={darkMode}
               toggleDarkMode={() => setDarkMode(!darkMode)}

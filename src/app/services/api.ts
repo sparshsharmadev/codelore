@@ -1,0 +1,35 @@
+const API_BASE = 'http://localhost:3001/api';
+
+export interface RepoData {
+  name: string;
+  owner: string;
+  fullName: string;
+  url: string;
+  branch: string;
+  description: string;
+  files: number;
+  lines: number;
+  primaryLanguage: string;
+  stars: number;
+  lastAnalyzed: string;
+  score: number;
+  fileTree: any[];
+  languages: Record<string, number>;
+}
+
+export const analyzeRepo = async (url: string): Promise<RepoData> => {
+  const response = await fetch(`${API_BASE}/analyze`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ url }),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || 'Failed to analyze repository');
+  }
+
+  return response.json();
+};

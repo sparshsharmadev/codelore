@@ -76,10 +76,17 @@ function getAllIds(nodes: FileNode[]): string[] {
   return nodes.flatMap((n) => [n.id, ...(n.children ? getAllIds(n.children) : [])]);
 }
 
-export default function FileExplorer() {
+import { RepoData } from "../../services/api";
+
+interface FileExplorerProps {
+  repoData: RepoData | null;
+}
+
+export default function FileExplorer({ repoData }: FileExplorerProps) {
+  const tree = repoData?.fileTree || mockFileTree;
   const [selectedNode, setSelectedNode] = useState<FileNode | null>(null);
   const [expandedIds, setExpandedIds] = useState<Set<string>>(
-    new Set(["app", "components", "lib", "app-product", "app-api"])
+    new Set(tree.slice(0, 3).map(n => n.id))
   );
   const [search, setSearch] = useState("");
 
@@ -100,13 +107,13 @@ export default function FileExplorer() {
             className="w-full px-2.5 py-1.5 bg-zinc-900 border border-zinc-800 text-xs text-zinc-300 placeholder-zinc-700 focus:outline-none focus:border-zinc-600 transition-colors"
           />
           <div className="flex gap-3 mt-2 px-0.5 text-xs text-zinc-800">
-            <button onClick={() => setExpandedIds(new Set(getAllIds(mockFileTree)))} className="hover:text-zinc-500 transition-colors">expand all</button>
+            <button onClick={() => setExpandedIds(new Set(getAllIds(tree)))} className="hover:text-zinc-500 transition-colors">expand all</button>
             <span>·</span>
             <button onClick={() => setExpandedIds(new Set())} className="hover:text-zinc-500 transition-colors">collapse</button>
           </div>
         </div>
         <div className="flex-1 overflow-y-auto py-1">
-          {mockFileTree.map((node) => (
+          {tree.map((node) => (
             <TreeNode
               key={node.id}
               node={node}
@@ -119,7 +126,7 @@ export default function FileExplorer() {
           ))}
         </div>
         <div className="px-3 py-2 border-t border-zinc-800 text-xs text-zinc-800">
-          247 files · ! = high complexity
+          {repoData?.files || 247} files · ! = high complexity
         </div>
       </div>
 
