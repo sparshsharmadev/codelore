@@ -1,0 +1,233 @@
+import { useState } from "react";
+import { ChevronRight, Terminal } from "lucide-react";
+
+interface LandingProps {
+  onGetStarted: () => void;
+}
+
+const features = [
+  { prefix: "01", title: "Architecture Map", description: "Visualize module structure, layer separation, and component boundaries as a static dependency graph." },
+  { prefix: "02", title: "Execution Flow", description: "Step through a request from entry point to data layer and back. Understand exactly how data moves." },
+  { prefix: "03", title: "File Explorer", description: "See what every file imports and exports, what calls it, and what it depends on — without reading source." },
+  { prefix: "04", title: "Dependency Audit", description: "Surface vulnerabilities, bundle sizes, license types, and outdated packages from package.json." },
+  { prefix: "05", title: "Onboarding Guide", description: "AI-generated setup instructions tailored to this specific repo. Not a generic README." },
+  { prefix: "06", title: "Ask Anything", description: "Chat with the codebase. Ask where auth lives, how to add a feature, or what a file does." },
+];
+
+const demoRepos = [
+  { name: "vercel/next-commerce", stars: "12.8k", desc: "Next.js e-commerce starter" },
+  { name: "shadcn-ui/ui", stars: "68.4k", desc: "Component library" },
+  { name: "supabase/supabase", stars: "67.2k", desc: "Firebase alternative" },
+  { name: "calcom/cal.com", stars: "31.1k", desc: "Scheduling infrastructure" },
+];
+
+export default function Landing({ onGetStarted }: LandingProps) {
+  const [hoveredRepo, setHoveredRepo] = useState<string | null>(null);
+
+  return (
+    <div
+      className="min-h-full bg-zinc-950 text-zinc-300 overflow-y-auto"
+      style={{ fontFamily: "'JetBrains Mono', monospace" }}
+    >
+      {/* Nav */}
+      <nav className="border-b border-zinc-800 px-6 h-12 flex items-center justify-between">
+        <div className="flex items-center gap-2 text-zinc-100 text-sm">
+          <Terminal className="w-4 h-4 text-zinc-500" />
+          <span style={{ fontWeight: 500 }}>codelens</span>
+          <span className="text-zinc-700">~</span>
+          <span className="text-zinc-600 text-xs">ai</span>
+        </div>
+        <div className="flex items-center gap-6">
+          <a href="#features" className="text-xs text-zinc-600 hover:text-zinc-300 transition-colors">
+            features
+          </a>
+          <a href="#how-it-works" className="text-xs text-zinc-600 hover:text-zinc-300 transition-colors">
+            how it works
+          </a>
+          <button
+            onClick={onGetStarted}
+            className="text-xs px-3 py-1.5 border border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:border-zinc-600 transition-colors"
+            style={{ fontWeight: 500 }}
+          >
+            get started →
+          </button>
+        </div>
+      </nav>
+
+      {/* Hero */}
+      <section className="pt-24 pb-20 px-6 max-w-4xl mx-auto">
+        <div className="mb-3 text-xs text-zinc-600">
+          <span className="text-zinc-500">$</span> codelens analyze github.com/your-org/your-repo
+        </div>
+
+        <h1
+          className="text-4xl md:text-5xl text-zinc-100 mb-6 leading-tight"
+          style={{ fontWeight: 700 }}
+        >
+          Understand any codebase
+          <br />
+          in minutes, not days.
+        </h1>
+
+        <p className="text-zinc-500 max-w-lg mb-10 leading-relaxed text-sm">
+          Paste a GitHub URL. Get an architecture map, execution trace, dependency
+          audit, and AI-generated onboarding guide — instantly.
+        </p>
+
+        <div className="flex items-center gap-3">
+          <button
+            onClick={onGetStarted}
+            className="flex items-center gap-2 px-5 py-2.5 bg-zinc-100 text-zinc-900 text-sm hover:bg-white transition-colors"
+            style={{ fontWeight: 600 }}
+          >
+            analyze a repo
+            <ChevronRight className="w-4 h-4" />
+          </button>
+          <button
+            onClick={onGetStarted}
+            className="flex items-center gap-2 px-5 py-2.5 border border-zinc-700 text-zinc-400 text-sm hover:bg-zinc-800 hover:border-zinc-600 transition-colors"
+            style={{ fontWeight: 500 }}
+          >
+            try demo
+          </button>
+        </div>
+
+        {/* Stats */}
+        <div className="mt-16 pt-8 border-t border-zinc-800 flex flex-wrap gap-10">
+          {[
+            { v: "10k+", l: "repos analyzed" },
+            { v: "~2min", l: "analysis time" },
+            { v: "98%", l: "architecture accuracy" },
+            { v: "GPT-4o", l: "powered by" },
+          ].map((s) => (
+            <div key={s.l}>
+              <div className="text-lg text-zinc-100" style={{ fontWeight: 700 }}>{s.v}</div>
+              <div className="text-xs text-zinc-600 mt-0.5">{s.l}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Demo repos */}
+      <section className="px-6 pb-16 max-w-4xl mx-auto">
+        <div className="text-xs text-zinc-700 uppercase tracking-widest mb-4">
+          # try with popular repos
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+          {demoRepos.map((repo) => (
+            <button
+              key={repo.name}
+              onClick={onGetStarted}
+              onMouseEnter={() => setHoveredRepo(repo.name)}
+              onMouseLeave={() => setHoveredRepo(null)}
+              className={`text-left p-3 border text-xs transition-all ${
+                hoveredRepo === repo.name
+                  ? "border-zinc-600 bg-zinc-900"
+                  : "border-zinc-800 hover:border-zinc-700"
+              }`}
+            >
+              <div className="text-zinc-200 mb-1 truncate" style={{ fontWeight: 500 }}>{repo.name}</div>
+              <div className="text-zinc-600">{repo.desc}</div>
+              <div className="text-zinc-700 mt-1">★ {repo.stars}</div>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {/* Features */}
+      <section id="features" className="px-6 pb-20 border-t border-zinc-800">
+        <div className="max-w-4xl mx-auto pt-16">
+          <div className="text-xs text-zinc-700 uppercase tracking-widest mb-2">
+            # features
+          </div>
+          <h2 className="text-2xl text-zinc-100 mb-10" style={{ fontWeight: 700 }}>
+            Six views. One codebase understood.
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px border border-zinc-800">
+            {features.map((f) => (
+              <div
+                key={f.prefix}
+                className="p-5 border-r border-b border-zinc-800 bg-zinc-950 hover:bg-zinc-900 transition-colors"
+              >
+                <div className="text-xs text-zinc-700 mb-3" style={{ fontWeight: 500 }}>
+                  {f.prefix}
+                </div>
+                <h3 className="text-sm text-zinc-200 mb-2" style={{ fontWeight: 600 }}>
+                  {f.title}
+                </h3>
+                <p className="text-xs text-zinc-500 leading-relaxed">{f.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* How it works */}
+      <section id="how-it-works" className="px-6 pb-20 border-t border-zinc-800">
+        <div className="max-w-3xl mx-auto pt-16">
+          <div className="text-xs text-zinc-700 uppercase tracking-widest mb-2">
+            # how it works
+          </div>
+          <h2 className="text-2xl text-zinc-100 mb-8" style={{ fontWeight: 700 }}>
+            Three steps.
+          </h2>
+          <div className="space-y-px border border-zinc-800">
+            {[
+              { step: "01", title: "Paste a GitHub URL", desc: "Public repos work instantly. Private repos connect via GitHub OAuth. We clone a read-only snapshot — your code is never stored." },
+              { step: "02", title: "AI indexes the codebase", desc: "We parse every file, build a dependency graph, trace execution paths, and run the codebase through our analysis pipeline. 30–120 seconds." },
+              { step: "03", title: "Explore the dashboard", desc: "Navigate architecture diagrams, chat with the AI, read the onboarding guide, and audit dependencies — all in one terminal-style interface." },
+            ].map((s) => (
+              <div key={s.step} className="flex gap-6 p-6 bg-zinc-950 border-b border-zinc-800 hover:bg-zinc-900 transition-colors">
+                <div className="text-xs text-zinc-700 flex-shrink-0 w-6">{s.step}</div>
+                <div>
+                  <h3 className="text-sm text-zinc-200 mb-1" style={{ fontWeight: 600 }}>{s.title}</h3>
+                  <p className="text-xs text-zinc-500 leading-relaxed">{s.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="px-6 pb-24 border-t border-zinc-800">
+        <div className="max-w-3xl mx-auto pt-16 text-center">
+          <div className="text-xs text-zinc-700 mb-6">
+            <span className="text-zinc-500">$</span> codelens analyze --help
+          </div>
+          <h2 className="text-2xl text-zinc-100 mb-3" style={{ fontWeight: 700 }}>
+            Ready to understand your codebase?
+          </h2>
+          <p className="text-zinc-500 mb-8 text-sm">
+            No sign-up required. Paste a URL, get results.
+          </p>
+          <button
+            onClick={onGetStarted}
+            className="inline-flex items-center gap-2 px-6 py-3 bg-zinc-100 text-zinc-900 text-sm hover:bg-white transition-colors"
+            style={{ fontWeight: 600 }}
+          >
+            analyze a repository
+            <ChevronRight className="w-4 h-4" />
+          </button>
+
+          <div className="flex items-center justify-center gap-8 mt-10 text-xs text-zinc-700">
+            <span>// we never store your code</span>
+            <span>// results in under 2 minutes</span>
+            <span>// free for public repos</span>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t border-zinc-800 px-6 py-6">
+        <div className="max-w-4xl mx-auto flex items-center justify-between text-xs text-zinc-700">
+          <div className="flex items-center gap-2">
+            <Terminal className="w-3.5 h-3.5" />
+            <span>codelens ai</span>
+          </div>
+          <span>© 2026</span>
+        </div>
+      </footer>
+    </div>
+  );
+}
