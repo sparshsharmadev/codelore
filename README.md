@@ -1,11 +1,11 @@
 
-  # AI Codebase Explainer Design
+  # codelore design
 
-  This is a code bundle for AI Codebase Explainer Design. The original project is available at https://www.figma.com/design/Zed1uqJtMwZEi8kz5zDbsz/AI-Codebase-Explainer-Design.
+  this is a code bundle for codelore design
+  the original project is available at https://www.figma.com/design/Zed1uqJtMwZEi8kz5zDbsz/AI-Codebase-Explainer-Design.
 
-  ## Running the code
+  ## running the code
 
-  Run `npm i` to install the dependencies.
-
-  Run `npm run dev` to start the development server.
+  run `npm i` to install the dependencies
+  run `npm run dev` to start the development server
   
