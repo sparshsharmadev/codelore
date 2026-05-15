@@ -14,7 +14,8 @@ export class GitService {
   }
 
   async clone(url: string): Promise<string> {
-    const repoName = Buffer.from(url).toString('hex').slice(0, 12);
+    const hash = Buffer.from(url).toString('hex');
+    const repoName = hash.slice(-12) + hash.slice(0, 8);
     const dir = path.join(this.baseDir, repoName);
 
     if (fs.existsSync(dir)) {

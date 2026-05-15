@@ -26,18 +26,21 @@ app.get('/api/health', (req, res) => {
 
 app.post('/api/analyze', async (req, res) => {
   const { url } = req.body;
+  console.log(`[server]: Received request to analyze: ${url}`);
 
   if (!url) {
     return res.status(400).json({ error: 'Repository URL is required' });
   }
 
   try {
-    console.log(`[server]: Analyzing repository: ${url}`);
+    console.log(`[server]: Cloning repository...`);
     const repoDir = await gitService.clone(url);
+    console.log(`[server]: Clone complete at ${repoDir}. Starting analysis...`);
+    
     const analyzer = new Analyzer(repoDir);
     const metrics = await analyzer.getMetrics();
+    console.log(`[server]: Analysis complete. Found ${metrics.totalFiles} files.`);
 
-    // Mocking some repo info for now
     const repoName = url.split('/').pop()?.replace('.git', '') || 'unknown';
     const owner = url.split('/').slice(-2, -1)[0] || 'unknown';
 
@@ -58,10 +61,15 @@ app.post('/api/analyze', async (req, res) => {
       languages: metrics.languages
     };
 
+    console.log(`[server]: Sending results back to client.`);
     res.json(repoInfo);
   } catch (error: any) {
     console.error(`[server]: Analysis failed:`, error);
-    res.status(500).json({ error: 'Failed to analyze repository', details: error.message });
+    res.status(500).json({ 
+      error: 'Failed to analyze repository', 
+      details: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined 
+    });
   }
 });
 

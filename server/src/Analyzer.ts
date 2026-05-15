@@ -20,11 +20,14 @@ export class Analyzer {
   }
 
   async getFileTree(currentDir: string = this.dir, relativePath: string = ''): Promise<FileNode[]> {
+    console.log(`[analyzer]: Scanning directory: ${relativePath || '/'}`);
     const entries = fs.readdirSync(currentDir, { withFileTypes: true });
     const nodes: FileNode[] = [];
 
+    const textExtensions = new Set(['.ts', '.tsx', '.js', '.jsx', '.json', '.css', '.html', '.md', '.py', '.go', '.rs', '.txt', '.yml', '.yaml', '.mjs', '.cjs']);
+
     for (const entry of entries) {
-      if (entry.name === '.git' || entry.name === 'node_modules') continue;
+      if (entry.name === '.git' || entry.name === 'node_modules' || entry.name === 'dist' || entry.name === '.next') continue;
 
       const fullPath = path.join(currentDir, entry.name);
       const relPath = path.join(relativePath, entry.name);
@@ -40,8 +43,17 @@ export class Analyzer {
         });
       } else {
         const stats = fs.statSync(fullPath);
-        const content = fs.readFileSync(fullPath, 'utf-8');
-        const lines = content.split('\n').length;
+        const ext = path.extname(entry.name).toLowerCase();
+        
+        let lines = 0;
+        if (textExtensions.has(ext)) {
+          try {
+            const content = fs.readFileSync(fullPath, 'utf-8');
+            lines = content.split('\n').length;
+          } catch (e) {
+            console.warn(`[analyzer]: Could not read file ${relPath}:`, e);
+          }
+        }
 
         nodes.push({
           id,

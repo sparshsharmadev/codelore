@@ -20,6 +20,7 @@ export default function Processing({ repoUrl, onComplete }: ProcessingProps) {
   const [globalProgress, setGlobalProgress] = useState(0);
   const [logLines, setLogLines] = useState<string[]>([]);
   const [dots, setDots] = useState(".");
+  const [error, setError] = useState<string | null>(null);
 
   const repoName = repoUrl.replace("https://github.com/", "");
 
@@ -37,13 +38,12 @@ export default function Processing({ repoUrl, onComplete }: ProcessingProps) {
 
     const runAnalysis = async () => {
       try {
-        // Step 1: Clone (Simulated progress for now until backend supports streaming)
+        setError(null);
         setCurrentStep(0);
-        setGlobalProgress(20);
+        setGlobalProgress(10);
         
         const data = await analyzeRepo(repoUrl);
         
-        // Step 2-4: Fast forward through remaining steps once data is back
         setCompletedSteps(new Set([0, 1, 2]));
         setCurrentStep(3);
         setGlobalProgress(100);
@@ -51,7 +51,10 @@ export default function Processing({ repoUrl, onComplete }: ProcessingProps) {
         
         setTimeout(() => onComplete(data), 1000);
       } catch (err: any) {
+        console.error("Analysis error:", err);
+        setError(err.message);
         setLogLines(prev => [...prev, `[error] ${err.message}`]);
+        if (err.stack) console.error(err.stack);
       }
     };
 
@@ -79,7 +82,11 @@ export default function Processing({ repoUrl, onComplete }: ProcessingProps) {
           <div className="text-xs text-zinc-600 mb-1">
             <span className="text-zinc-500">$</span> codelore analyze github.com/{repoName}
           </div>
-          <div className="text-xs text-zinc-700 mb-8">analyzing codebase{dots}</div>
+          {error ? (
+            <div className="text-xs text-red-500 mb-8 font-bold">analysis failed: {error}</div>
+          ) : (
+            <div className="text-xs text-zinc-700 mb-8">analyzing codebase{dots}</div>
+          )}
 
           {/* Progress bar */}
           <div className="mb-8">
@@ -89,9 +96,9 @@ export default function Processing({ repoUrl, onComplete }: ProcessingProps) {
                 <span className="text-xs text-zinc-400">done</span>
               )}
             </div>
-            <div className="h-px bg-zinc-800">
+            <div className={`h-px ${error ? 'bg-red-900' : 'bg-zinc-800'}`}>
               <div
-                className="h-full bg-zinc-400 transition-all duration-200"
+                className={`h-full transition-all duration-200 ${error ? 'bg-red-500' : 'bg-zinc-400'}`}
                 style={{ width: `${globalProgress}%` }}
               />
             </div>
@@ -101,7 +108,7 @@ export default function Processing({ repoUrl, onComplete }: ProcessingProps) {
           <div className="space-y-1 mb-8">
             {steps.map((step, i) => {
               const isDone = completedSteps.has(i);
-              const isActive = currentStep === i && !isDone;
+              const isActive = currentStep === i && !isDone && !error;
               const isPending = !isDone && !isActive;
               return (
                 <div
@@ -115,12 +122,14 @@ export default function Processing({ repoUrl, onComplete }: ProcessingProps) {
                       <Check className="w-3 h-3 text-zinc-400" />
                     ) : isActive ? (
                       <span className="text-zinc-300">›</span>
+                    ) : error && currentStep === i ? (
+                      <span className="text-red-500">×</span>
                     ) : (
                       <span className="text-zinc-700">·</span>
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <span className={isDone ? "text-zinc-600" : isActive ? "text-zinc-200" : "text-zinc-700"}>
+                    <span className={isDone ? "text-zinc-600" : isActive ? "text-zinc-200" : error && currentStep === i ? "text-red-400" : "text-zinc-700"}>
                       {step.label}
                     </span>
                     {isActive && (
@@ -128,26 +137,27 @@ export default function Processing({ repoUrl, onComplete }: ProcessingProps) {
                     )}
                   </div>
                   {isDone && <span className="text-zinc-700 flex-shrink-0">ok</span>}
+                  {error && currentStep === i && <span className="text-red-900 flex-shrink-0">error</span>}
                 </div>
               );
             })}
           </div>
 
           {/* Terminal log */}
-          <div className="border border-zinc-800 bg-zinc-900">
-            <div className="flex items-center gap-2 px-3 py-2 border-b border-zinc-800 text-xs text-zinc-700">
+          <div className={`border ${error ? 'border-red-900' : 'border-zinc-800'} bg-zinc-900`}>
+            <div className={`flex items-center gap-2 px-3 py-2 border-b ${error ? 'border-red-900' : 'border-zinc-800'} text-xs text-zinc-700`}>
               <span>analysis.log</span>
             </div>
             <div className="p-3 space-y-1 min-h-[100px] max-h-[140px] overflow-y-auto">
               {logLines.map((line, i) => (
                 <div
                   key={i}
-                  className={`text-xs ${line.startsWith("$") ? "text-zinc-400" : "text-zinc-600"}`}
+                  className={`text-xs ${line.startsWith("$") ? "text-zinc-400" : line.startsWith("[error]") ? "text-red-500" : "text-zinc-600"}`}
                 >
                   {line}
                 </div>
               ))}
-              {globalProgress < 100 && (
+              {!error && globalProgress < 100 && (
                 <div className="text-xs text-zinc-700">
                   › {steps[currentStep]?.detail}{dots}
                 </div>
@@ -157,6 +167,15 @@ export default function Processing({ repoUrl, onComplete }: ProcessingProps) {
               )}
             </div>
           </div>
+
+          {error && (
+            <button
+              onClick={() => window.location.reload()}
+              className="mt-6 w-full py-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs transition-colors"
+            >
+              try again
+            </button>
+          )}
         </div>
       </div>
     </div>
