@@ -44,7 +44,7 @@ export default function RepoImport({ onAnalyze, onBack }: RepoImportProps) {
         </button>
         <div className="flex items-center gap-2 text-zinc-500 text-sm">
           <Terminal className="w-3.5 h-3.5" />
-          <span>codelens</span>
+          <span>codelore</span>
           <span className="text-zinc-700">/</span>
           <span>analyze</span>
         </div>
@@ -54,14 +54,14 @@ export default function RepoImport({ onAnalyze, onBack }: RepoImportProps) {
         <div className="w-full max-w-lg">
           {/* Prompt line */}
           <div className="text-xs text-zinc-700 mb-6">
-            <span className="text-zinc-500">$</span> codelens analyze [repo-url]
+            <span className="text-zinc-500">$</span> codelore analyze [repo-url]
           </div>
 
           <h1 className="text-xl text-zinc-100 mb-1" style={{ fontWeight: 700 }}>
-            Analyze a repository
+            analyze a repository
           </h1>
           <p className="text-xs text-zinc-600 mb-8">
-            Paste a public GitHub URL or connect your account for private repos.
+            paste a public github url or connect your account for private repos.
           </p>
 
           {/* Tabs */}

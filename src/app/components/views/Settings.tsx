@@ -169,7 +169,7 @@ export default function Settings() {
           </Row>
         </Section>
 
-        <div className="text-xs text-zinc-800 text-center">codelens ai v1.0.0</div>
+        <div className="text-xs text-zinc-800 text-center">codelore ai v1.0.0</div>
       </div>
     </div>
   );

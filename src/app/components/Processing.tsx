@@ -85,7 +85,7 @@ export default function Processing({ repoUrl, onComplete }: ProcessingProps) {
       {/* Header */}
       <div className="border-b border-zinc-800 px-6 py-3 flex items-center gap-2 text-zinc-600 text-xs">
         <Terminal className="w-3.5 h-3.5" />
-        <span>codelens</span>
+        <span>codelore</span>
         <span className="text-zinc-800">/</span>
         <span>analyze</span>
         <span className="text-zinc-800">/</span>
@@ -96,7 +96,7 @@ export default function Processing({ repoUrl, onComplete }: ProcessingProps) {
         <div className="w-full max-w-lg">
           {/* Repo */}
           <div className="text-xs text-zinc-600 mb-1">
-            <span className="text-zinc-500">$</span> codelens analyze github.com/{repoName}
+            <span className="text-zinc-500">$</span> codelore analyze github.com/{repoName}
           </div>
           <div className="text-xs text-zinc-700 mb-8">analyzing codebase{dots}</div>
 

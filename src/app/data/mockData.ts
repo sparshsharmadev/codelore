@@ -5,7 +5,7 @@ export const mockRepo = {
   url: "https://github.com/vercel/next-commerce",
   branch: "main",
   description:
-    "An all-in-one starter kit for high-performance e-commerce sites built with Next.js, Tailwind, and Shopify.",
+    "an all-in-one starter kit for high-performance e-commerce sites built with next.js, tailwind, and shopify.",
   files: 247,
   lines: 18420,
   primaryLanguage: "TypeScript",
@@ -333,21 +333,21 @@ export const archNodes: ArchNode[] = [
   { id: "page-cart", label: "/cart", sublabel: "page.tsx", type: "page", x: 530, y: 40, width: 80, height: 44 },
 
   // Components - second row
-  { id: "comp-navbar", label: "Navbar", sublabel: "components/navbar", type: "component", x: 60, y: 165, width: 90, height: 44 },
-  { id: "comp-productgrid", label: "ProductGrid", sublabel: "components/product", type: "component", x: 195, y: 165, width: 110, height: 44 },
-  { id: "comp-cart-drawer", label: "CartModal", sublabel: "components/cart", type: "component", x: 355, y: 165, width: 100, height: 44 },
-  { id: "comp-gallery", label: "Gallery", sublabel: "components/gallery", type: "component", x: 505, y: 165, width: 90, height: 44 },
+  { id: "comp-navbar", label: "navbar", sublabel: "components/navbar", type: "component", x: 60, y: 165, width: 90, height: 44 },
+  { id: "comp-productgrid", label: "productgrid", sublabel: "components/product", type: "component", x: 195, y: 165, width: 110, height: 44 },
+  { id: "comp-cart-drawer", label: "cartmodal", sublabel: "components/cart", type: "component", x: 355, y: 165, width: 100, height: 44 },
+  { id: "comp-gallery", label: "gallery", sublabel: "components/gallery", type: "component", x: 505, y: 165, width: 90, height: 44 },
 
   // API / Server Layer - third row
-  { id: "api-revalidate", label: "Revalidate", sublabel: "api/revalidate", type: "api", x: 60, y: 290, width: 110, height: 44 },
-  { id: "cart-actions", label: "Cart Actions", sublabel: "Server Actions", type: "api", x: 210, y: 290, width: 110, height: 44 },
+  { id: "api-revalidate", label: "revalidate", sublabel: "api/revalidate", type: "api", x: 60, y: 290, width: 110, height: 44 },
+  { id: "cart-actions", label: "cart actions", sublabel: "server actions", type: "api", x: 210, y: 290, width: 110, height: 44 },
 
   // Lib - fourth row
-  { id: "lib-shopify", label: "Shopify Client", sublabel: "lib/shopify", type: "util", x: 60, y: 415, width: 120, height: 44 },
-  { id: "lib-utils", label: "Utils", sublabel: "lib/utils.ts", type: "util", x: 220, y: 415, width: 80, height: 44 },
+  { id: "lib-shopify", label: "shopify client", sublabel: "lib/shopify", type: "util", x: 60, y: 415, width: 120, height: 44 },
+  { id: "lib-utils", label: "utils", sublabel: "lib/utils.ts", type: "util", x: 220, y: 415, width: 80, height: 44 },
 
   // External
-  { id: "ext-shopify", label: "Shopify API", sublabel: "Storefront GraphQL", type: "external", x: 380, y: 415, width: 130, height: 44 },
+  { id: "ext-shopify", label: "shopify api", sublabel: "storefront graphql", type: "external", x: 380, y: 415, width: 130, height: 44 },
 ];
 
 export const archEdges: ArchEdge[] = [
@@ -480,12 +480,12 @@ export interface Insight {
 }
 
 export const mockInsights: Insight[] = [
-  { id: "1", category: "architecture", severity: "success", title: "Clean layered architecture", description: "Pages → Components → Lib separation is well-maintained. No component imports directly from pages.", effort: "low" },
-  { id: "2", category: "performance", severity: "success", title: "ISR caching correctly configured", description: "All Shopify fetches use Next.js fetch cache with appropriate revalidate intervals.", effort: "low" },
-  { id: "3", category: "quality", severity: "warning", title: "Missing error boundaries", description: "app/product/[handle]/page.tsx has no error.tsx sibling. Shopify API failures will show a generic 500 page.", file: "app/product/[handle]/page.tsx", effort: "low" },
-  { id: "4", category: "security", severity: "warning", title: "Webhook not verifying HMAC signature", description: "app/api/revalidate/route.ts doesn't validate the X-Shopify-Hmac-SHA256 header. Anyone can trigger revalidation.", file: "app/api/revalidate/route.ts", effort: "medium" },
-  { id: "5", category: "maintainability", severity: "info", title: "GraphQL queries are plain strings", description: "lib/shopify/queries/*.ts export raw template strings. Consider codegen for type safety on Shopify API responses.", effort: "high" },
-  { id: "6", category: "performance", severity: "info", title: "No loading.tsx on search route", description: "app/search/ lacks a loading.tsx. Search queries may feel slow — adding a skeleton state improves perceived performance.", file: "app/search/", effort: "low" },
+  { id: "1", category: "architecture", severity: "success", title: "clean layered architecture", description: "pages → components → lib separation is well-maintained. no component imports directly from pages.", effort: "low" },
+  { id: "2", category: "performance", severity: "success", title: "isr caching correctly configured", description: "all shopify fetches use next.js fetch cache with appropriate revalidate intervals.", effort: "low" },
+  { id: "3", category: "quality", severity: "warning", title: "missing error boundaries", description: "app/product/[handle]/page.tsx has no error.tsx sibling. shopify api failures will show a generic 500 page.", file: "app/product/[handle]/page.tsx", effort: "low" },
+  { id: "4", category: "security", severity: "warning", title: "webhook not verifying hmac signature", description: "app/api/revalidate/route.ts doesn't validate the x-shopify-hmac-sha256 header. anyone can trigger revalidation.", file: "app/api/revalidate/route.ts", effort: "medium" },
+  { id: "5", category: "maintainability", severity: "info", title: "graphql queries are plain strings", description: "lib/shopify/queries/*.ts export raw template strings. consider codegen for type safety on shopify api responses.", effort: "high" },
+  { id: "6", category: "performance", severity: "info", title: "no loading.tsx on search route", description: "app/search/ lacks a loading.tsx. search queries may feel slow — adding a skeleton state improves perceived performance.", file: "app/search/", effort: "low" },
 ];
 
 export const mockOnboardingSteps = [

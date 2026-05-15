@@ -36,7 +36,7 @@ export default function Sidebar({ activeView, onViewChange, onBack }: SidebarPro
       {/* Logo */}
       <div className="px-4 py-3.5 border-b border-zinc-800 flex items-center gap-2">
         <Terminal className="w-3.5 h-3.5 text-zinc-600" />
-        <span className="text-xs text-zinc-400" style={{ fontWeight: 500 }}>codelens</span>
+        <span className="text-xs text-zinc-400" style={{ fontWeight: 500 }}>codelore</span>
       </div>
 
       {/* Repo info */}

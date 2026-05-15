@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion } from "motion/react";
 import { ChevronRight, Terminal } from "lucide-react";
 
 interface LandingProps {
@@ -6,12 +7,12 @@ interface LandingProps {
 }
 
 const features = [
-  { prefix: "01", title: "Architecture Map", description: "Visualize module structure, layer separation, and component boundaries as a static dependency graph." },
-  { prefix: "02", title: "Execution Flow", description: "Step through a request from entry point to data layer and back. Understand exactly how data moves." },
-  { prefix: "03", title: "File Explorer", description: "See what every file imports and exports, what calls it, and what it depends on — without reading source." },
-  { prefix: "04", title: "Dependency Audit", description: "Surface vulnerabilities, bundle sizes, license types, and outdated packages from package.json." },
-  { prefix: "05", title: "Onboarding Guide", description: "AI-generated setup instructions tailored to this specific repo. Not a generic README." },
-  { prefix: "06", title: "Ask Anything", description: "Chat with the codebase. Ask where auth lives, how to add a feature, or what a file does." },
+  { prefix: "01", title: "architecture map", description: "visualize module structure, layer separation, and component boundaries as a static dependency graph." },
+  { prefix: "02", title: "execution flow", description: "step through a request from entry point to data layer and back. understand exactly how data moves." },
+  { prefix: "03", title: "file explorer", description: "see what every file imports and exports, what calls it, and what it depends on — without reading source." },
+  { prefix: "04", title: "dependency audit", description: "surface vulnerabilities, bundle sizes, license types, and outdated packages from package.json." },
+  { prefix: "05", title: "onboarding guide", description: "ai-generated setup instructions tailored to this specific repo. not a generic readme." },
+  { prefix: "06", title: "ask anything", description: "chat with the codebase. ask where auth lives, how to add a feature, or what a file does." },
 ];
 
 const demoRepos = [
@@ -27,51 +28,68 @@ export default function Landing({ onGetStarted }: LandingProps) {
   return (
     <div
       className="min-h-full bg-zinc-950 text-zinc-300 overflow-y-auto"
-      style={{ fontFamily: "'JetBrains Mono', monospace" }}
+      style={{ fontFamily: "'JetBrains Mono', monospace", scrollBehavior: "smooth" }}
     >
       {/* Nav */}
       <nav className="border-b border-zinc-800 px-6 h-12 flex items-center justify-between">
-        <div className="flex items-center gap-2 text-zinc-100 text-sm">
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          onClick={() => document.querySelector(".overflow-y-auto")?.scrollTo({ top: 0, behavior: "smooth" })}
+          className="flex items-center gap-2 text-zinc-100 text-sm hover:text-white transition-colors"
+        >
           <Terminal className="w-4 h-4 text-zinc-500" />
-          <span style={{ fontWeight: 500 }}>codelens</span>
+          <span style={{ fontWeight: 500 }}>codelore</span>
           <span className="text-zinc-700">~</span>
           <span className="text-zinc-600 text-xs">ai</span>
-        </div>
+        </motion.button>
         <div className="flex items-center gap-6">
-          <a href="#features" className="text-xs text-zinc-600 hover:text-zinc-300 transition-colors">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => document.getElementById("features")?.scrollIntoView({ behavior: "smooth" })}
+            className="text-xs text-zinc-600 hover:text-zinc-300 transition-colors"
+          >
             features
-          </a>
-          <a href="#how-it-works" className="text-xs text-zinc-600 hover:text-zinc-300 transition-colors">
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => document.getElementById("how-it-works")?.scrollIntoView({ behavior: "smooth" })}
+            className="text-xs text-zinc-600 hover:text-zinc-300 transition-colors"
+          >
             how it works
-          </a>
-          <button
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={onGetStarted}
             className="text-xs px-3 py-1.5 border border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:border-zinc-600 transition-colors"
             style={{ fontWeight: 500 }}
           >
             get started →
-          </button>
+          </motion.button>
         </div>
       </nav>
 
       {/* Hero */}
       <section className="pt-24 pb-20 px-6 max-w-4xl mx-auto">
         <div className="mb-3 text-xs text-zinc-600">
-          <span className="text-zinc-500">$</span> codelens analyze github.com/your-org/your-repo
+          <span className="text-zinc-500">$</span> codelore analyze github.com/your-org/your-repo
         </div>
 
         <h1
           className="text-4xl md:text-5xl text-zinc-100 mb-6 leading-tight"
           style={{ fontWeight: 700 }}
         >
-          Understand any codebase
+          understand any codebase
           <br />
           in minutes, not days.
         </h1>
 
         <p className="text-zinc-500 max-w-lg mb-10 leading-relaxed text-sm">
-          Paste a GitHub URL. Get an architecture map, execution trace, dependency
-          audit, and AI-generated onboarding guide — instantly.
+          paste a github url. get an architecture map, execution trace, dependency
+          audit, and ai-generated onboarding guide — instantly.
         </p>
 
         <div className="flex items-center gap-3">
@@ -141,7 +159,7 @@ export default function Landing({ onGetStarted }: LandingProps) {
             # features
           </div>
           <h2 className="text-2xl text-zinc-100 mb-10" style={{ fontWeight: 700 }}>
-            Six views. One codebase understood.
+            six views. one codebase understood.
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px border border-zinc-800">
             {features.map((f) => (
@@ -169,13 +187,13 @@ export default function Landing({ onGetStarted }: LandingProps) {
             # how it works
           </div>
           <h2 className="text-2xl text-zinc-100 mb-8" style={{ fontWeight: 700 }}>
-            Three steps.
+            three steps.
           </h2>
           <div className="space-y-px border border-zinc-800">
             {[
-              { step: "01", title: "Paste a GitHub URL", desc: "Public repos work instantly. Private repos connect via GitHub OAuth. We clone a read-only snapshot — your code is never stored." },
-              { step: "02", title: "AI indexes the codebase", desc: "We parse every file, build a dependency graph, trace execution paths, and run the codebase through our analysis pipeline. 30–120 seconds." },
-              { step: "03", title: "Explore the dashboard", desc: "Navigate architecture diagrams, chat with the AI, read the onboarding guide, and audit dependencies — all in one terminal-style interface." },
+              { step: "01", title: "paste a github url", desc: "public repos work instantly. private repos connect via github oauth. we clone a read-only snapshot — your code is never stored." },
+              { step: "02", title: "ai indexes the codebase", desc: "we parse every file, build a dependency graph, trace execution paths, and run the codebase through our analysis pipeline. 30–120 seconds." },
+              { step: "03", title: "explore the dashboard", desc: "navigate architecture diagrams, chat with the ai, read the onboarding guide, and audit dependencies — all in one terminal-style interface." },
             ].map((s) => (
               <div key={s.step} className="flex gap-6 p-6 bg-zinc-950 border-b border-zinc-800 hover:bg-zinc-900 transition-colors">
                 <div className="text-xs text-zinc-700 flex-shrink-0 w-6">{s.step}</div>
@@ -190,16 +208,16 @@ export default function Landing({ onGetStarted }: LandingProps) {
       </section>
 
       {/* CTA */}
-      <section className="px-6 pb-24 border-t border-zinc-800">
+      <section id="cta" className="px-6 pb-24 border-t border-zinc-800">
         <div className="max-w-3xl mx-auto pt-16 text-center">
           <div className="text-xs text-zinc-700 mb-6">
-            <span className="text-zinc-500">$</span> codelens analyze --help
+            <span className="text-zinc-500">$</span> codelore analyze --help
           </div>
           <h2 className="text-2xl text-zinc-100 mb-3" style={{ fontWeight: 700 }}>
-            Ready to understand your codebase?
+            ready to understand your codebase?
           </h2>
           <p className="text-zinc-500 mb-8 text-sm">
-            No sign-up required. Paste a URL, get results.
+            no sign-up required. paste a url, get results.
           </p>
           <button
             onClick={onGetStarted}
@@ -223,7 +241,7 @@ export default function Landing({ onGetStarted }: LandingProps) {
         <div className="max-w-4xl mx-auto flex items-center justify-between text-xs text-zinc-700">
           <div className="flex items-center gap-2">
             <Terminal className="w-3.5 h-3.5" />
-            <span>codelens ai</span>
+            <span>codelore ai</span>
           </div>
           <span>© 2026</span>
         </div>

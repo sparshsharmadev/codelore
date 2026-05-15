@@ -45,7 +45,7 @@ export default function Overview({ onNavigate }: OverviewProps) {
         <div className="flex items-start justify-between">
           <div>
             <div className="text-xs text-zinc-600 mb-1">
-              <span className="text-zinc-500">$</span> codelens info github.com/{mockRepo.fullName}
+              <span className="text-zinc-500">$</span> codelore info github.com/{mockRepo.fullName}
             </div>
             <div className="text-sm text-zinc-200 mb-2" style={{ fontWeight: 600 }}>
               {mockRepo.owner}/<span className="text-zinc-100">{mockRepo.name}</span>

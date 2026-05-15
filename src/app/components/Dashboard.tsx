@@ -24,7 +24,7 @@ const viewMeta: Record<DashboardView, { title: string; sub: string }> = {
   files:        { title: "file explorer",   sub: "247 files · browse and understand" },
   execution:    { title: "execution flow",  sub: "request lifecycle trace" },
   dependencies: { title: "dependencies",    sub: "10 packages · 1 vulnerability" },
-  onboarding:   { title: "onboarding",      sub: "AI-generated setup guide" },
+  onboarding:   { title: "onboarding",      sub: "ai-generated setup guide" },
   chat:         { title: "ask ai",          sub: "chat with your codebase" },
   settings:     { title: "settings",        sub: "configure preferences and API keys" },
 };
@@ -44,7 +44,7 @@ export default function Dashboard({ repoUrl, darkMode, toggleDarkMode, onBack }:
       <header className="flex-shrink-0 flex items-center justify-between px-4 h-11 border-b border-zinc-800 bg-zinc-950">
         <div className="flex items-center gap-2 text-xs text-zinc-600">
           <Terminal className="w-3.5 h-3.5" />
-          <span>codelens</span>
+          <span>codelore</span>
           <span className="text-zinc-800">/</span>
           <span className="text-zinc-500">{mockRepo.fullName}</span>
           <span className="text-zinc-800">/</span>
