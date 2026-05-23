@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node dist/index.js",
     "dev": "tsx watch src/index.ts",
+    "dev:one-port": "tsx src/index.one-port.ts",
     "build": "tsc"
   },
   "dependencies": {
