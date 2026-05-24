@@ -192,7 +192,7 @@ export default function AIChat({ repoData }: AIChatProps) {
       <div className="flex items-center justify-between px-6 py-3 border-b border-zinc-800">
         <div className="flex items-center gap-2 text-xs text-zinc-500">
           <Terminal className="w-3.5 h-3.5 text-zinc-700" />
-          <span>ask ai</span>
+          <span>ask cl.ai</span>
           <span className="text-zinc-800">·</span>
           <span className="text-zinc-700">codebase-aware · {repoName}</span>
         </div>
@@ -209,8 +209,8 @@ export default function AIChat({ repoData }: AIChatProps) {
       <div className="flex-1 overflow-y-auto px-6 py-6 space-y-6">
         {messages.map((msg) => (
           <div key={msg.id} className={`flex gap-3 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
-            <div className="flex-shrink-0 text-xs text-zinc-700 mt-0.5 w-8 text-right">
-              {msg.role === "user" ? "you" : "ai"}
+            <div className="flex-shrink-0 text-xs text-zinc-700 mt-0.5 w-[40px] text-right">
+              {msg.role === "user" ? "you" : "cl.ai"}
             </div>
             <div className={`flex-1 max-w-xl ${msg.role === "user" ? "flex flex-col items-end" : ""}`}>
               {msg.role === "user" ? (
@@ -227,7 +227,7 @@ export default function AIChat({ repoData }: AIChatProps) {
                     <div className="space-y-2">
                       <div className="border border-zinc-800 bg-zinc-900/30 overflow-hidden">
                         <div className="flex items-center justify-between px-4 py-1.5 border-b border-zinc-800 bg-zinc-900/50">
-                          <span className="text-[10px] text-zinc-500 uppercase tracking-widest">ai-orchestrator response</span>
+                          <span className="text-[10px] text-zinc-500 uppercase tracking-widest">cl.ai response</span>
                           <div className="flex items-center gap-1.5">
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500/50" />
                             <span className="text-[10px] text-zinc-600 uppercase tracking-widest">grounded in codebase</span>
@@ -240,15 +240,9 @@ export default function AIChat({ repoData }: AIChatProps) {
                           )}
                         </div>
                       </div>
-                      {!msg.isStreaming && msg.confidence && (
+                      {!msg.isStreaming && (
                         <div className="flex items-center gap-4">
-                          <div className="flex items-center gap-2 text-xs text-zinc-700">
-                            <div className="w-10 h-px bg-zinc-800">
-                              <div className="h-full bg-zinc-500" style={{ width: `${msg.confidence}%` }} />
-                            </div>
-                            <span>{msg.confidence}% confidence</span>
-                          </div>
-                          {msg.sources && (
+                          {msg.sources && msg.sources.length > 0 && (
                             <div className="flex items-center gap-1.5 flex-wrap">
                               {msg.sources.map((src) => (
                                 <span key={src} className="text-xs text-zinc-700 border border-zinc-800 px-1.5 py-0.5">{src}</span>
