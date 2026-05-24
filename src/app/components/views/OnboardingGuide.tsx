@@ -35,6 +35,7 @@ interface OnboardingGuideProps {
 }
 
 export default function OnboardingGuide({ repoData }: OnboardingGuideProps) {
+  const repoName = repoData?.fullName || "this repository";
   const steps = repoData?.onboarding || mockOnboardingSteps;
   const [expandedSteps, setExpandedSteps] = useState<Set<number>>(new Set([1, 2, 3]));
   const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set([1, 2]));
@@ -53,7 +54,7 @@ export default function OnboardingGuide({ repoData }: OnboardingGuideProps) {
       <div className="max-w-xl mx-auto px-8 py-8">
 
         {/* Header */}
-        <div className="text-xs text-zinc-700 mb-1">{`// ai-generated · tailored to antigravity/codelore`}</div>
+        <div className="text-xs text-zinc-700 mb-1">{`// ai-generated · tailored to ${repoName}`}</div>
         <div className="text-xs text-zinc-600 mb-8">
           step-by-step setup instructions. not a generic README.
         </div>
