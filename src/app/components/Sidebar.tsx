@@ -26,7 +26,7 @@ const navItems: { id: DashboardView; label: string; key: string }[] = [
   { id: "execution",     label: "execution flow",  key: "e" },
   { id: "dependencies",  label: "dependencies",    key: "d" },
   { id: "onboarding",    label: "onboarding",      key: "g" },
-  { id: "chat",          label: "ask ai  ✦",       key: "c" },
+  { id: "chat",          label: "ask cl.ai  ✦",       key: "c" },
 ];
 
 export default function Sidebar({ activeView, onViewChange, onBack, repoData }: SidebarProps) {
