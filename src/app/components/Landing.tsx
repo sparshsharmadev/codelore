@@ -104,7 +104,7 @@ export default function Landing({ onGetStarted }: LandingProps) {
             { v: "10k+", l: "repos analyzed" },
             { v: "~2min", l: "analysis time" },
             { v: "98%", l: "architecture accuracy" },
-            { v: "GPT-4o", l: "powered by" },
+            { v: "cl.ai", l: "powered by" },
           ].map((s) => (
             <div key={s.l}>
               <div className="text-lg text-zinc-100" style={{ fontWeight: 700 }}>{s.v}</div>
