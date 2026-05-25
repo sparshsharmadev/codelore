@@ -1,7 +1,7 @@
 import { ArrowLeft, Terminal, ChevronRight, Layers, GitBranch } from "lucide-react";
 
 interface GetStartedSelectProps {
-  onSelectOption: (option: "demo" | "custom") => void;
+  onSelectOption: (option: "demo" | "custom" | "cli") => void;
   onBack: () => void;
 }
 
@@ -31,7 +31,7 @@ export default function GetStartedSelect({ onSelectOption, onBack }: GetStartedS
       </div>
 
       <div className="flex-1 flex items-center justify-center px-6 py-12 overflow-y-auto">
-        <div className="w-full max-w-2xl">
+        <div className="w-full max-w-4xl">
           {/* Prompt line */}
           <div className="text-xs text-zinc-700 mb-6">
             <span className="text-zinc-500">$</span> codelore initialize --interactive
@@ -44,7 +44,7 @@ export default function GetStartedSelect({ onSelectOption, onBack }: GetStartedS
             select an option below to begin exploring and analyzing codebases.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Card 1: Test Repo */}
             <button
               onClick={() => onSelectOption("demo")}
@@ -96,6 +96,34 @@ export default function GetStartedSelect({ onSelectOption, onBack }: GetStartedS
               <div className="flex items-center justify-between mt-4">
                 <span className="text-[9px] text-zinc-600 font-semibold group-hover:text-zinc-400 transition-colors">
                   // clone & analyze
+                </span>
+                <ChevronRight className="w-4 h-4 text-zinc-700 group-hover:text-zinc-400 group-hover:translate-x-0.5 transition-all" />
+              </div>
+            </button>
+
+            {/* Card 3: CLI Installation */}
+            <button
+              onClick={() => onSelectOption("cli")}
+              className="group relative flex flex-col justify-between p-6 bg-zinc-900/20 border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900/50 active:bg-zinc-900 transition-all text-left rounded-sm cursor-pointer min-h-[180px] overflow-hidden"
+            >
+              {/* Visual corner highlight */}
+              <div className="absolute right-0 top-0 w-24 h-24 bg-gradient-to-br from-violet-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+              <div>
+                <div className="w-8 h-8 rounded-sm bg-zinc-900 border border-zinc-800 flex items-center justify-center mb-4 group-hover:border-zinc-700 transition-colors">
+                  <Terminal className="w-4 h-4 text-zinc-500 group-hover:text-zinc-300 transition-colors" />
+                </div>
+                <h3 className="text-sm font-semibold text-zinc-200 group-hover:text-zinc-50 transition-colors mb-2">
+                  cli installation
+                </h3>
+                <p className="text-[11px] text-zinc-500 leading-relaxed mb-4">
+                  Install the global command line interface to run codebase diagnostics directly from your local terminal.
+                </p>
+              </div>
+
+              <div className="flex items-center justify-between mt-4">
+                <span className="text-[9px] text-zinc-600 font-semibold group-hover:text-zinc-400 transition-colors">
+                  // terminal client
                 </span>
                 <ChevronRight className="w-4 h-4 text-zinc-700 group-hover:text-zinc-400 group-hover:translate-x-0.5 transition-all" />
               </div>
