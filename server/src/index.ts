@@ -8,9 +8,8 @@ import { Analyzer } from './Analyzer.js';
 import { fileURLToPath } from 'url';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const projectRoot = path.join(__dirname, '../..');
+// Vercel Serverless Function compatibility: Avoid import.meta.url and top-level await
+const projectRoot = process.cwd();
 const distPath = path.join(projectRoot, 'dist');
 
 dotenv.config();
@@ -18,7 +17,7 @@ dotenv.config();
 import os from 'os';
 const app = express();
 const port = process.env.PORT || 3001;
-const reposDir = process.env.VERCEL ? path.join(os.tmpdir(), 'repos') : path.join(__dirname, '../data/repos');
+const reposDir = process.env.VERCEL ? path.join(os.tmpdir(), 'repos') : path.join(projectRoot, 'server/data/repos');
 const useViteMiddleware = process.env.CODELORE_VITE_MIDDLEWARE === '1';
 
 // Initialize Gemini or prepare for OpenRouter
@@ -35,16 +34,19 @@ app.use(express.json({ limit: '50mb' }));
 
 let vite: any = null;
 if (useViteMiddleware) {
-  const { createServer } = await import('vite');
-  vite = await createServer({
-    root: projectRoot,
-    appType: 'custom',
-    server: {
-      middlewareMode: true,
-      watch: {
-        ignored: ['**/server/data/**']
+  // Safe dynamic import without top-level await
+  import('vite').then(async ({ createServer }) => {
+    vite = await createServer({
+      root: projectRoot,
+      appType: 'custom',
+      server: {
+        middlewareMode: true,
+        watch: {
+          ignored: ['**/server/data/**']
+        }
       }
-    }
+    });
+    app.use(vite.middlewares);
   });
 } else {
   app.use(express.static(distPath));
@@ -325,10 +327,6 @@ Rules:
     });
   }
 });
-
-if (vite) {
-  app.use(vite.middlewares);
-}
 
 // Fallback for SPA routing
 app.get('*', async (req, res) => {
