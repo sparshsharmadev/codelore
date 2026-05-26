@@ -330,7 +330,7 @@ Rules:
 });
 
 // Fallback for SPA routing
-app.get('*', async (req, res) => {
+app.get('(.*)', async (req, res) => {
   if (req.path.startsWith('/api')) {
     return res.status(404).json({ error: 'Not found' });
   }
